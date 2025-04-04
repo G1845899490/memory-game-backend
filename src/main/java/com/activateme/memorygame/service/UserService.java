@@ -6,6 +6,7 @@ import com.activateme.memorygame.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +41,19 @@ public class UserService {
         throw new RuntimeException("Invalid credentials");
     }
 
-    public void changePassword(Long userId, String newPassword) {
+    public String changePassword(Long userId, String newPassword, String oldPassword) {
+        // 获取当前用户
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        // 验证旧密码
+        Boolean match = passwordEncoder.matches(oldPassword, user.getPassword());
+        if (!match) {
+            return "Old password is incorrect";
+        } else {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return "Password updated";
+        }
     }
 
     public User findByUsername(String username) {

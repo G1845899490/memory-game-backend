@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/game")
@@ -22,22 +24,25 @@ public class GameController {
     }
 
     @PostMapping("/history")
-    public ResponseEntity<GameHistory> saveGameHistory(@RequestBody GameHistory gameHistory) {
-        System.out.println("gameHistory.getPlayedAt()："+gameHistory.getPlayedAt());
+    public ResponseEntity<?> saveGameHistory(@RequestBody GameHistory gameHistory) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        System.out.println("saveGameHistory user.getId()："+user.getId());
         gameHistory.setUser(user);
         GameHistory saved = gameHistoryService.saveGameHistory(gameHistory);
-        return ResponseEntity.ok(saved);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", saved.getId());
+        response.put("userId", saved.getUser().getId());
+        response.put("userName", saved.getUser().getUsername());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/history")
     public ResponseEntity<List<GameHistory>> getGameHistory() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        System.out.println("getGameHistory user.getId()："+user.getId());
         List<GameHistory> history = gameHistoryService.getUserGameHistory(user.getId());
+        // 去除List<GameHistory> history中的user属性
+        history.forEach(gameHistory -> gameHistory.setUser(null));
         return ResponseEntity.ok(history);
     }
 }

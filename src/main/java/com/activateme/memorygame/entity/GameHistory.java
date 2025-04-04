@@ -23,11 +23,7 @@ public class GameHistory {
     @Column
     private Integer score;
 
-    // 可以保留这个字段以保持向后兼容
-    //@Column(name = "completion_time")
-    //private Integer completionTime;
-
-    // 添加新字段存储灵活的游戏数据
+    // 存储灵活的游戏数据
     @Column(name = "game_data", columnDefinition = "TEXT")
     private String gameData;
 

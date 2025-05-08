@@ -71,4 +71,9 @@ public interface GameHistoryRepository extends JpaRepository<GameHistory, Long> 
             nativeQuery = true)
     Integer findRankByGameTypeAndUserId(@Param("gameType") String gameType, @Param("userId") Long userId);
 
+    // 按roomId和敌人用户名查询敌人的分数
+    @Query(value = "SELECT score " +
+            "FROM game_history " +
+            "WHERE room_id = :roomId AND user_id = :enemyId", nativeQuery = true)
+    Integer findScoreByRoomIdAndUserId(@Param("roomId") String roomId, @Param("enemyId") Long enemyId);
 }

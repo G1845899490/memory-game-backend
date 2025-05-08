@@ -22,4 +22,9 @@ public class GameHistoryService {
     public List<GameHistory> getUserGameHistory(Long userId) {
         return gameHistoryRepository.findByUserId(userId);
     }
+
+    // 按roomId和敌人用户名查询
+    public Integer findScoreByRoomIdAndUserId(String roomId, Long enemyId) {
+        return gameHistoryRepository.findScoreByRoomIdAndUserId(roomId, enemyId);
+    }
 }

@@ -29,4 +29,7 @@ public class GameHistory {
 
     @Column(name = "played_at")
     private LocalDateTime playedAt;
+
+    @Column(name = "room_id")
+    private String roomId;
 }

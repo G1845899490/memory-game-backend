@@ -5,7 +5,7 @@
     <groupId>com.activateme</groupId>
     <artifactId>memory-game</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>memory-game</name>
     <description>memory-game</description>
     <properties>
@@ -43,7 +43,8 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
+            <!--标记该依赖在 编译和测试阶段可用，但不会被打包到最终的构建输出（如 JAR/WAR）中-->
+            <!--<scope>provided</scope>-->
         </dependency>
 
         <dependency>
@@ -116,11 +117,13 @@
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
+                <!--spring-boot-maven-plugin：将普通的 Maven 项目打包结果（JAR/WAR）转换为可执行的 Spring Boot JAR（即 "fat JAR"）-->
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.activateme.memorygame.MemoryGameApplication</mainClass>
-                    <skip>true</skip>
+                    <!--跳过 repackage 阶段，不生成可执行 JAR：生成的 JAR 不包含内嵌依赖和 Spring Boot 启动器-->
+                    <!--<skip>true</skip>-->
                 </configuration>
                 <executions>
                     <execution>
